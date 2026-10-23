@@ -1,0 +1,74 @@
+using UnityEngine;
+
+public class PlayerMove : MonoBehaviour
+{
+    public float step = 0.1f;
+    public float speed = 5.0f;
+    public float jumpeForce = 700f;
+    public Rigidbody2D rb;
+    public int jumpCount = 0;
+    public int score = 0;
+    public int life = 3;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //float xPos = transform.position.x;
+        //float yPos = transform.position.y;
+
+        //if (Input.GetKey(KeyCode.RightArrow))
+        //{
+        //    //transform.position = new Vector2(xPos + step, yPos);
+        //    rb.linearVelocity =new Vector2(speed, 0);
+        //}
+
+        //if (Input.GetKey(KeyCode.LeftArrow))
+        //{
+        //    //transform.position = new Vector2(xPos - step, yPos);
+        //    rb.linearVelocity = new Vector2(speed* -1, 0);
+        //}
+
+        float directionX = Input.GetAxis("Horizontal");
+        rb.linearVelocity = new Vector2(speed * directionX,0);
+
+
+        if (Input.GetKeyUp(KeyCode.UpArrow))
+        {
+            //transform.position = new Vector2(xPos, yPos + step * jumpeForce);
+            if (jumpCount<2)
+            {
+                rb.AddForce(new Vector2(0, jumpeForce), ForceMode2D.Impulse);
+                jumpCount++;
+            }
+
+        }
+
+     
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+        if (collision.gameObject.CompareTag("gold"))
+        {
+            score++;
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.CompareTag("poision"))
+        {
+            life--;
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            jumpCount = 0;
+        }
+
+
+    }
+}
